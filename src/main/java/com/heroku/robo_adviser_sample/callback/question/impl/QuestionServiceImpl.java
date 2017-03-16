@@ -17,8 +17,8 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
-	public Question load(Integer no) {
-		return loadAll().stream().filter(q -> no.equals(q.getNo())).findFirst().orElse(null);
+	public Question load(Integer id) {
+		return loadAll().stream().filter(q -> id.equals(q.getId())).findFirst().orElse(null);
 	}
 
 }

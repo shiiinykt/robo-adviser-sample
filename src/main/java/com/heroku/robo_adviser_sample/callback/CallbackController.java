@@ -95,19 +95,19 @@ public class CallbackController {
 	
 	private static void process(Event event) {
 		LineSession session = LineSession.get(event);
-		int no = session.attribute(QUESTION_ID);
+		int id = session.attribute(QUESTION_ID);
 		
-		if (no == 1 || event instanceof PostbackEvent) {
+		if (id == 1 || event instanceof PostbackEvent) {
 			
-			if (no <= questionService.loadAll().size()) {
-				Question question = questionService.load(no);
+			if (id <= questionService.loadAll().size()) {
+				Question question = questionService.load(id);
 				List<Action> ansers = new ArrayList<Action>();
 				
 				for (int i = 0; i < question.getAnsers().size(); i ++) {
 					ansers.add(new PostbackAction(question.getAnsers().get(i), String.valueOf(i)));
 				}
 				
-				TemplateMessage templateMessage = new TemplateMessage("質問" + no,new ButtonsTemplate(null, "質問" + no, question.getQuestion(), ansers));
+				TemplateMessage templateMessage = new TemplateMessage("質問" + id, new ButtonsTemplate(null, "質問" + id, question.getQuestion(), ansers));
 				PushMessage pushMessage = new PushMessage(event.getSource().getUserId(), templateMessage);
 				service.pushMessage(pushMessage);
 				

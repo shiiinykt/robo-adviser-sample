@@ -1,12 +1,12 @@
 - !!com.heroku.robo_adviser_sample.callback.question.Question
-  no: 1
+  id: 1
   question: "あなたの性別をお答えください。"
   ansers:
     - "男性"
     - "女性"
     - "回答しない"
 - !!com.heroku.robo_adviser_sample.callback.question.Question
-  no: 2
+  id: 2
   question: "あなたの年代を教えてください。"
   ansers:
     - "20代"
