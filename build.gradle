@@ -1,0 +1,71 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+def defaultEncoding = 'UTF-8'
+[compileJava, compileTestJava]*.options*.encoding = defaultEncoding
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'robo-adviser-sample'
+archivesBaseName = 'robo-adviser-sample' 
+version = '0.1'
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main { compileClasspath += configurations.provided }
+}
+
+eclipse {
+   classpath {
+        plusConfigurations += [configurations.provided]
+        noExportConfigurations += [configurations.provided]
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.sparkjava:spark-core:2.5.5'
+    compile 'com.gitblit.iciql:iciql:2.1.1'
+    compile 'com.google.inject:guice:4.1.0'
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.18'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    compile group: 'com.linecorp.bot', name: 'line-bot-api-client', version: '1.6.0'
+    compile group: 'com.linecorp.bot', name: 'line-bot-model', version: '1.6.0'
+    compile group: 'org.cache2k', name: 'cache2k-api', version: '1.0.0.CR2'
+    compile group: 'org.cache2k', name: 'cache2k-all', version: '1.0.0.CR2'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.21'
+    provided 'org.projectlombok:lombok:1.16.10'
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version
+        attributes "Main-Class" : "com.heroku.robo_adviser_sample.Application"
+    }
+    
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.14.1'
+}
+
+task stage {
+  dependsOn assemble
+}
+
+mainClassName = 'com.heroku.robo_adviser_sample.Application'
