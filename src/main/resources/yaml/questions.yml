@@ -18,8 +18,8 @@
   question: "交流会に参加したところ、知り合いが１人もいませんでした。あなたはどうしますか？"
   ansers:
     - "何もせず帰る"
-    - "話しかけられるまで待つ"
-    - "とりあえず様子を見てから動き出す"
+    - "話しかけられる待つ"
+    - "様子を見てから動く"
     - "積極的に話しかける"
 - !!com.heroku.robo_adviser_sample.callback.question.Question
   id: 4
@@ -34,8 +34,8 @@
   question: "年始にデパートに行ったら福袋が売られていました。どうしますか？"
   ansers:
     - "絶対に買わない"
-    - "中身がある程度わかるなら買う"
-    - "余裕があればとりあえず買う"
+    - "中身があるわかるなら買う"
+    - "余裕があれば買う"
     - "絶対に買う"
 - !!com.heroku.robo_adviser_sample.callback.question.Question
   id: 6
