@@ -26,7 +26,7 @@
   question: "少し体調が悪い。どうしますか。"
   ansers:
     - "すぐに病院に行く"
-    - "ネットで調べ、記入であれば病院に行く"
+    - "ネットで調べてから病院に行く"
     - "とりあえず様子を見る"
     - "薬には頼らない"
 - !!com.heroku.robo_adviser_sample.callback.question.Question
