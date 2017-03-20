@@ -114,7 +114,7 @@ public class CallbackController {
 					answers.add(new PostbackAction(question.getAnswers().get(i), userAnswer.toJson()));
 				}
 				
-				TemplateMessage templateMessage = new TemplateMessage(question.getId(), new ButtonsTemplate(null, question.getId(), question.getQuestion(), answers));
+				TemplateMessage templateMessage = new TemplateMessage(question.getId(), new ButtonsTemplate(question.getImageUrl(), question.getId(), question.getQuestion(), answers));
 				PushMessage pushMessage = new PushMessage(event.getSource().getUserId(), templateMessage);
 				service.pushMessage(pushMessage);
 				

@@ -8,5 +8,6 @@ import lombok.Data;
 public class Question {
 	private String id;
 	private String question;
+	private String imageUrl;
 	private List<String> answers;
 }
