@@ -1,14 +1,14 @@
 - !!com.heroku.robo_adviser_sample.callback.question.Question
   id: "質問1"
   question: "あなたの性別をお答えください。"
-  ansers:
+  answers:
     - "男性"
     - "女性"
     - "回答しない"
 - !!com.heroku.robo_adviser_sample.callback.question.Question
   id: "質問2"
   question: "あなたの年代を教えてください。"
-  ansers:
+  answers:
     - "20代"
     - "30代"
     - "40代"
@@ -16,7 +16,7 @@
 - !!com.heroku.robo_adviser_sample.callback.question.Question
   id: "質問3"
   question: "交流会に参加したところ、知り合いが１人もいませんでした。あなたはどうしますか？"
-  ansers:
+  answers:
     - "何もせず帰る"
     - "話しかけられる待つ"
     - "様子を見てから動く"
@@ -24,7 +24,7 @@
 - !!com.heroku.robo_adviser_sample.callback.question.Question
   id: "質問4"
   question: "少し体調が悪い。どうしますか。"
-  ansers:
+  answers:
     - "すぐに病院に行く"
     - "ネットで調べてから病院に行く"
     - "とりあえず様子を見る"
@@ -32,7 +32,7 @@
 - !!com.heroku.robo_adviser_sample.callback.question.Question
   id: "質問5"
   question: "年始にデパートに行ったら福袋が売られていました。どうしますか？"
-  ansers:
+  answers:
     - "絶対に買わない"
     - "中身がわかるなら買う"
     - "余裕があれば買う"
@@ -40,7 +40,7 @@
 - !!com.heroku.robo_adviser_sample.callback.question.Question
   id: "質問6"
   question: "あなたの使っているスマホの新作が出ました。どうしますか？"
-  ansers:
+  answers:
     - "事前に予約する"
     - "とりあえず様子を見る"
     - "新作にはあまり興味がない"
