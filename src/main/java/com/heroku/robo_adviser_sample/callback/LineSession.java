@@ -17,7 +17,7 @@ public class LineSession {
 	private Map<String, Object> attributes;
 	private String userId;
 	
-	private LineSession(String userId) {
+	protected LineSession(String userId) {
 		attributes = new HashMap<String, Object>();
 		this.userId = userId;
 	}

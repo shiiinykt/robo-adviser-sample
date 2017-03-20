@@ -31,12 +31,6 @@ public class CallbackController {
 	@Inject
 	private static QuestionService questionService;
 	
-	private static String ACTION_ID = "aid";
-	private static String QUESTION_ID = "qid";
-	
-	private static String BEGIN = "BEGIN";
-	private static String PROCESS = "PROCESS";
-	private static String END = "END";
 	private static String YES = "はい";
 	private static String NO = "いいえ";
 	
@@ -51,20 +45,22 @@ public class CallbackController {
 	};
 	
 	private static void handleQuestion(Event event) {
-		if (LineSession.get(event) == null) {
+		UserSession session = (UserSession) UserSession.get(event);
+		
+		if (session == null) {
 			initial(event);
-		} else if (BEGIN.equals(LineSession.get(event).attribute(ACTION_ID))) {
+		} else if (UserSession.BEGIN.equals(session.getAction())) {
 			begin(event);
-		} else if (PROCESS.equals(LineSession.get(event).attribute(ACTION_ID))) {
+		} else if (UserSession.PROCESS.equals(session.getAction())) {
 			process(event); 
-		} else if (END.equals(LineSession.get(event).attribute(ACTION_ID))) {
+		} else if (UserSession.END.equals(session.getAction())) {
 			end(event); 
 		}
 	}
 	
 	private static void initial(Event event) {
-		LineSession session = LineSession.get(event, true);
-		session.attribute(ACTION_ID, BEGIN);
+		UserSession session = (UserSession) UserSession.get(event, true);
+		session.setAction(UserSession.BEGIN);
 
 		List<Action> actions = new ArrayList<Action>();
 		actions.add(new MessageAction("はい", YES));
@@ -79,11 +75,10 @@ public class CallbackController {
 	private static void begin(Event event) {
 		if (event instanceof MessageEvent<?>
 			&& ((MessageEvent<?>) event).getMessage() instanceof TextMessageContent) {
-				LineSession session = LineSession.get(event);
-				
+			UserSession session = (UserSession) UserSession.get(event);
+			
 			if (YES.equals(((TextMessageContent)((MessageEvent<?>) event).getMessage()).getText())) {
-				session.attribute(ACTION_ID, PROCESS);
-				session.attribute(QUESTION_ID, 1); 
+				session.setAction(UserSession.PROCESS);;
 				handleQuestion(event);
 
 			} else if(NO.equals(((TextMessageContent)((MessageEvent<?>) event).getMessage()).getText())) {
@@ -94,26 +89,33 @@ public class CallbackController {
 	}
 	
 	private static void process(Event event) {
-		LineSession session = LineSession.get(event);
-		int id = session.attribute(QUESTION_ID);
+		UserSession session = (UserSession) UserSession.get(event, true);
 		
-		if (id == 1 || event instanceof PostbackEvent) {
+		if (session.getUserAnsers().size() == 0 || event instanceof PostbackEvent) {
 			
-			if (id <= questionService.loadAll().size()) {
-				Question question = questionService.load(id);
+			if (event instanceof PostbackEvent) {
+				UserAnser userAnser = UserAnser.getObj(((PostbackEvent) event).getPostbackContent().getData());
+				session.addUserAnser(userAnser);
+			}
+			
+			if (session.getUnAnsweredQuestion(questionService.loadAll()) != null) {
+				Question question = session.getUnAnsweredQuestion(questionService.loadAll());
 				List<Action> ansers = new ArrayList<Action>();
 				
 				for (int i = 0; i < question.getAnsers().size(); i ++) {
-					ansers.add(new PostbackAction(question.getAnsers().get(i), String.valueOf(i)));
+					UserAnser userAnser = new UserAnser();
+					userAnser.setQuestionId(question.getId());
+					userAnser.setAnserId(i);
+					
+					ansers.add(new PostbackAction(question.getAnsers().get(i), userAnser.toJson()));
 				}
 				
-				TemplateMessage templateMessage = new TemplateMessage("質問" + id, new ButtonsTemplate(null, "質問" + id, question.getQuestion(), ansers));
+				TemplateMessage templateMessage = new TemplateMessage(question.getId(), new ButtonsTemplate(null, question.getId(), question.getQuestion(), ansers));
 				PushMessage pushMessage = new PushMessage(event.getSource().getUserId(), templateMessage);
 				service.pushMessage(pushMessage);
 				
-				session.attribute(QUESTION_ID, (Integer) session.attribute(QUESTION_ID) + 1);
 			} else {
-				session.attribute(ACTION_ID, END);
+				session.setAction(UserSession.END);
 				handleQuestion(event);
 			}
 		}
@@ -124,7 +126,7 @@ public class CallbackController {
 		PushMessage message = new PushMessage(event.getSource().getUserId(), text);
 		service.pushMessage(message);
 		
-		LineSession session = LineSession.get(event);
+		UserSession session = (UserSession) UserSession.get(event);
 		session.invalidate();
 	}
 }

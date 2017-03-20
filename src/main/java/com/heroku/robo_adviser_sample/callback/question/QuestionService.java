@@ -10,6 +10,6 @@ public interface QuestionService {
 	
 	List<Question> loadAll();
 	
-	Question load(Integer no);
+	Question load(String id);
 
 }
