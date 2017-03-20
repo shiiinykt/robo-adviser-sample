@@ -10,7 +10,7 @@ import org.cache2k.Cache2kBuilder;
 import com.linecorp.bot.model.event.Event;
 
 public class LineSession {
-	private static Cache<String, LineSession> lineSessionStore = new Cache2kBuilder<String, LineSession>() {}
+	protected static Cache<String, Object> lineSessionStore = new Cache2kBuilder<String, Object>() {}
 	.expireAfterWrite(5, TimeUnit.MINUTES)
 	.build();
 
@@ -33,9 +33,9 @@ public class LineSession {
 			lineSessionStore.put(userId, new LineSession(userId));
 		}
 		
-		
-		return lineSessionStore.get(userId);
-	}
+		return (LineSession) lineSessionStore.get(userId);
+	}	
+
 	
 	public void invalidate() {
 		lineSessionStore.remove(userId);

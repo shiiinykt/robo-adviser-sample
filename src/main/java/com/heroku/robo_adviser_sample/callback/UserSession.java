@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.heroku.robo_adviser_sample.callback.question.Question;
+import com.linecorp.bot.model.event.Event;
 
 public class UserSession extends LineSession {
 
@@ -18,7 +19,21 @@ public class UserSession extends LineSession {
 	protected UserSession(String userId) {
 		super(userId);	
 	}
+		
+
+	public static UserSession get(Event event) {
+		return get(event, false);
+	}
 	
+	public static UserSession get(Event event, boolean created) {
+		String userId = event.getSource().getUserId();
+		
+		if(created && !lineSessionStore.containsKey(userId)) {
+			lineSessionStore.put(userId, new UserSession(userId));
+		}
+		
+		return (UserSession) lineSessionStore.get(userId);
+	}	
 	public String getAction() {
 		return attribute(ACTION_ID);
 	}

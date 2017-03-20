@@ -45,7 +45,7 @@ public class CallbackController {
 	};
 	
 	private static void handleQuestion(Event event) {
-		UserSession session = (UserSession) UserSession.get(event);
+		UserSession session = UserSession.get(event);
 		
 		if (session == null) {
 			initial(event);
@@ -75,7 +75,7 @@ public class CallbackController {
 	private static void begin(Event event) {
 		if (event instanceof MessageEvent<?>
 			&& ((MessageEvent<?>) event).getMessage() instanceof TextMessageContent) {
-			UserSession session = (UserSession) UserSession.get(event);
+			UserSession session = UserSession.get(event);
 			
 			if (YES.equals(((TextMessageContent)((MessageEvent<?>) event).getMessage()).getText())) {
 				session.setAction(UserSession.PROCESS);;
@@ -89,7 +89,7 @@ public class CallbackController {
 	}
 	
 	private static void process(Event event) {
-		UserSession session = (UserSession) UserSession.get(event, true);
+		UserSession session = UserSession.get(event, true);
 		
 		if (session.getUserAnsers().size() == 0 || event instanceof PostbackEvent) {
 			
@@ -126,7 +126,7 @@ public class CallbackController {
 		PushMessage message = new PushMessage(event.getSource().getUserId(), text);
 		service.pushMessage(message);
 		
-		UserSession session = (UserSession) UserSession.get(event);
+		UserSession session = UserSession.get(event);
 		session.invalidate();
 	}
 }
