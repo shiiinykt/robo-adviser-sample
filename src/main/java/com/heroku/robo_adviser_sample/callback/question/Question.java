@@ -8,5 +8,5 @@ import lombok.Data;
 public class Question {
 	private String id;
 	private String question;
-	private List<String> ansers;
+	private List<String> answers;
 }

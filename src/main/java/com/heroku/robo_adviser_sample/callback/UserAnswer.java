@@ -5,18 +5,18 @@ import com.google.gson.Gson;
 import lombok.Data;
 
 @Data
-public class UserAnser {
+public class UserAnswer {
 
 	private String questionId;
-	private Integer anserId;
+	private Integer answerId;
 	
 	public String toJson() {
 		Gson gson = new Gson();
 		return gson.toJson(this);
 	}
 	
-	public static UserAnser getObj(String json) {
+	public static UserAnswer getObj(String json) {
 		Gson gson = new Gson();
-		return gson.fromJson(json, UserAnser.class);
+		return gson.fromJson(json, UserAnswer.class);
 	}
 }

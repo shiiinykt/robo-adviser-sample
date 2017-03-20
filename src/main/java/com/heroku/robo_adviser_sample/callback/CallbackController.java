@@ -6,6 +6,8 @@ import java.util.List;
 import com.google.inject.Inject;
 import com.heroku.robo_adviser_sample.callback.question.Question;
 import com.heroku.robo_adviser_sample.callback.question.QuestionService;
+import com.heroku.robo_adviser_sample.callback.result.Result;
+import com.heroku.robo_adviser_sample.callback.result.ResultService;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.Action;
 import com.linecorp.bot.model.action.MessageAction;
@@ -30,6 +32,8 @@ public class CallbackController {
 	private static CallbackService service;
 	@Inject
 	private static QuestionService questionService;
+	@Inject
+	private static ResultService resultService;
 	
 	private static String YES = "はい";
 	private static String NO = "いいえ";
@@ -91,26 +95,26 @@ public class CallbackController {
 	private static void process(Event event) {
 		UserSession session = UserSession.get(event, true);
 		
-		if (session.getUserAnsers().size() == 0 || event instanceof PostbackEvent) {
+		if (session.getUserAnswers().size() == 0 || event instanceof PostbackEvent) {
 			
 			if (event instanceof PostbackEvent) {
-				UserAnser userAnser = UserAnser.getObj(((PostbackEvent) event).getPostbackContent().getData());
-				session.addUserAnser(userAnser);
+				UserAnswer userAnswer = UserAnswer.getObj(((PostbackEvent) event).getPostbackContent().getData());
+				session.addUserAnswer(userAnswer);
 			}
 			
 			if (session.getUnAnsweredQuestion(questionService.loadAll()) != null) {
 				Question question = session.getUnAnsweredQuestion(questionService.loadAll());
-				List<Action> ansers = new ArrayList<Action>();
+				List<Action> answers = new ArrayList<Action>();
 				
-				for (int i = 0; i < question.getAnsers().size(); i ++) {
-					UserAnser userAnser = new UserAnser();
-					userAnser.setQuestionId(question.getId());
-					userAnser.setAnserId(i);
+				for (int i = 0; i < question.getAnswers().size(); i ++) {
+					UserAnswer userAnswer = new UserAnswer();
+					userAnswer.setQuestionId(question.getId());
+					userAnswer.setAnswerId(i);
 					
-					ansers.add(new PostbackAction(question.getAnsers().get(i), userAnser.toJson()));
+					answers.add(new PostbackAction(question.getAnswers().get(i), userAnswer.toJson()));
 				}
 				
-				TemplateMessage templateMessage = new TemplateMessage(question.getId(), new ButtonsTemplate(null, question.getId(), question.getQuestion(), ansers));
+				TemplateMessage templateMessage = new TemplateMessage(question.getId(), new ButtonsTemplate(null, question.getId(), question.getQuestion(), answers));
 				PushMessage pushMessage = new PushMessage(event.getSource().getUserId(), templateMessage);
 				service.pushMessage(pushMessage);
 				
@@ -127,6 +131,12 @@ public class CallbackController {
 		service.pushMessage(message);
 		
 		UserSession session = UserSession.get(event);
+		Result result = resultService.calc(session.getUserAnswers());
+		
+		text = new TextMessage(result.getResult());
+		message = new PushMessage(event.getSource().getUserId(), text);
+		service.pushMessage(message);
+		
 		session.invalidate();
 	}
 }

@@ -9,7 +9,7 @@ import com.linecorp.bot.model.event.Event;
 public class UserSession extends LineSession {
 
 	public static String ACTION_ID = UserSession.class.getName() + ".ACTION_ID";
-	public static String USER_ANSERS = UserSession.class.getName() + ".USER_ANSERS";
+	public static String USER_ANSWERS = UserSession.class.getName() + ".USER_ANSWERS";
 	
 	public static String BEGIN = UserSession.class.getName() + ".BEGIN";
 	public static String PROCESS = UserSession.class.getName() + ".PROCESS";
@@ -42,31 +42,31 @@ public class UserSession extends LineSession {
 		attribute(ACTION_ID, action);
 	}
 	
-	public void addUserAnser(UserAnser userAnser) {
-		List<UserAnser>userAnsers = getUserAnsers();
+	public void addUserAnswer(UserAnswer userAnswer) {
+		List<UserAnswer>userAnswers = getUserAnswers();
 		
-		userAnsers.add(userAnser);
+		userAnswers.add(userAnswer);
 	}
 	
-	public UserAnser getUserAnser(String id) {
-		List<UserAnser> userAnsers = getUserAnsers();
+	public UserAnswer getUserAnswer(String id) {
+		List<UserAnswer> userAnswers = getUserAnswers();
 		
-		return userAnsers.stream().filter(u -> id.equals(u.getQuestionId())).findFirst().orElseGet(null);
+		return userAnswers.stream().filter(u -> id.equals(u.getQuestionId())).findFirst().orElseGet(null);
 	}
 	
-	public List<UserAnser> getUserAnsers() {
-		if (attribute(USER_ANSERS) == null) {
-			attribute(USER_ANSERS, new ArrayList<UserAnser>());
+	public List<UserAnswer> getUserAnswers() {
+		if (attribute(USER_ANSWERS) == null) {
+			attribute(USER_ANSWERS, new ArrayList<UserAnswer>());
 		}
 		
-		List<UserAnser> userAnsers = attribute(USER_ANSERS);
-		return userAnsers;
+		List<UserAnswer> userAnswers = attribute(USER_ANSWERS);
+		return userAnswers;
 	}
 	
 	public Question getUnAnsweredQuestion(List<Question> list) {
 		
 		for (Question q : list) {
-			if (getUserAnsers().stream().filter(ua -> q.getId().equals(ua.getQuestionId())).count() == 0) {
+			if (getUserAnswers().stream().filter(ua -> q.getId().equals(ua.getQuestionId())).count() == 0) {
 				return q;
 			}
 		}
